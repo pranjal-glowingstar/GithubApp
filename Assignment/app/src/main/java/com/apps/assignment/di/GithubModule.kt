@@ -1,13 +1,17 @@
 package com.apps.assignment.di
 
+import android.content.Context
 import com.apps.assignment.data.remote.GithubApiService
+import com.apps.assignment.data.remote.TokenInterceptor
 import com.apps.assignment.repository.GithubRepositoryImpl
 import com.apps.assignment.repository.IGithubRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -18,8 +22,10 @@ class GithubModule {
 
     @Provides
     @Singleton
-    fun getRetrofitInstance(): Retrofit{
-        return Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(GsonConverterFactory.create()).build()
+    fun getRetrofitInstance(@ApplicationContext context: Context): Retrofit{
+        return Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(GsonConverterFactory.create()).client(
+            OkHttpClient.Builder().addInterceptor(TokenInterceptor(context)).build()
+        ).build()
     }
 
     @Provides

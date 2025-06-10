@@ -23,11 +23,9 @@ fun MainScreen(viewModel: MainViewModel) {
     Column(modifier = Modifier.fillMaxSize()) {
         TextField(value = searchTextfield, onValueChange = onValueChange)
 
-        searchTextfield?.let {
-            LazyColumn {
-                items(list.size){
-                    GithubUser()
-                }
+        LazyColumn {
+            items(list.size){
+                GithubUser()
             }
         }
     }

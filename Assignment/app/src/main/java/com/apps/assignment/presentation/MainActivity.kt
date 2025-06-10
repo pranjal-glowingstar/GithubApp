@@ -16,9 +16,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        viewModel.updateToken()
         setContent {
             AssignmentTheme {
-                MainScreen(viewModel)
+                Navigation(viewModel)
             }
         }
     }
