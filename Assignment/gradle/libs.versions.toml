@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+converterGson = "3.0.0"
 hiltAndroid = "2.56.2"
 kotlin = "2.0.0"
 coreKtx = "1.16.0"
@@ -14,6 +15,7 @@ retrofitVersion = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
