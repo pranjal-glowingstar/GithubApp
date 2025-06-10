@@ -1,6 +1,5 @@
 package com.apps.assignment.di
 
-import android.content.Context
 import com.apps.assignment.data.remote.GithubApiService
 import com.apps.assignment.data.remote.TokenInterceptor
 import com.apps.assignment.repository.GithubRepositoryImpl
@@ -9,7 +8,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -22,9 +20,9 @@ class GithubModule {
 
     @Provides
     @Singleton
-    fun getRetrofitInstance(@ApplicationContext context: Context): Retrofit{
+    fun getRetrofitInstance(): Retrofit{
         return Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(GsonConverterFactory.create()).client(
-            OkHttpClient.Builder().addInterceptor(TokenInterceptor(context)).build()
+            OkHttpClient.Builder().addInterceptor(TokenInterceptor()).build()
         ).build()
     }
 

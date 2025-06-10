@@ -5,10 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.apps.assignment.presentation.composable.MainScreen
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import com.apps.assignment.presentation.navigation.Navigation
 import com.apps.assignment.presentation.viewmodel.MainViewModel
 import com.apps.assignment.ui.theme.AssignmentTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
@@ -16,10 +21,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        viewModel.updateToken()
         setContent {
             AssignmentTheme {
-                Navigation(viewModel)
+                Surface(modifier = Modifier.safeDrawingPadding()) {
+                    Navigation(viewModel)
+                }
             }
         }
     }
