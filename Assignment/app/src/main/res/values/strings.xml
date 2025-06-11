@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Assignment</string>
     <string name="welcome">Welcome!</string>
-    <string name="search">Search!</string>
+    <string name="search">Search</string>
     <string name="enter">Enter a user name to start search</string>
     <string name="error_no_user">Sorry. No user with given character set found. Please check and try again.</string>
     <string name="error_prefix">Please enter at least 3 words before searching :(</string>
     <string name="network_error">Sorry. Unable to proceed due to network issues. Please check if you have good internet coverage.</string>
-    <string name="user_name">User Name:- </string>
+    <string name="user_name">User Name</string>
     <string name="name">Name:- </string>
     <string name="bio">Bio:- </string>>
     <string name="followers">Followers:- </string>>

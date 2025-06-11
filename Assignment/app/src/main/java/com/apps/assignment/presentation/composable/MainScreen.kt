@@ -49,7 +49,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
     }
     val searchUserData = remember(viewModel) {
         {
-            viewModel.searchUserData()
+            viewModel.searchUserData(true)
         }
     }
     val onItemClicked: (UserSummary) -> Unit = remember(viewModel) {

@@ -2,6 +2,7 @@ package com.apps.assignment.presentation.composable
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,8 +34,10 @@ fun GithubUserTile(user: UserSummary, onItemClicked: (UserSummary) -> Unit) {
             .border(width = 2.dp, color = MaterialTheme.colorScheme.outline)
             .padding(all = 8.dp), verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = context.getString(R.string.user_name), style = MaterialTheme.typography.titleSmall)
-        Text(text = user.login, style = MaterialTheme.typography.bodySmall)
+        Column {
+            Text(text = context.getString(R.string.user_name), style = MaterialTheme.typography.titleSmall)
+            Text(text = user.login, style = MaterialTheme.typography.bodySmall)
+        }
         Spacer(modifier = Modifier.weight(1f))
         AsyncImage(
             model = user.avatarUrl,

@@ -1,5 +1,6 @@
 package com.apps.assignment.presentation.viewmodel
 
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apps.assignment.models.UserSummary
@@ -9,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,10 +30,14 @@ class MainViewModel @Inject constructor(private val githubRepository: IGithubRep
     fun updateTextField(prefix: String){
         _searchTextField.value = prefix
     }
-    fun searchUserData(){
+    fun searchUserData(isNewSearch: Boolean = false){
         if(_searchTextField.value.length >= 3){
             viewModelScope.launch(Dispatchers.IO) {
-                val response = githubRepository.searchPrefix(_searchTextField.value, _pageNumber.value)
+                if(isNewSearch){
+                    _userList.value = listOf()
+                    _pageNumber.value = 1
+                }
+                val response = githubRepository.searchPrefix(_searchTextField.value.lowercase(), _pageNumber.value)
                 if(response.isSuccessful){
                     val currentList = _userList.value.toMutableList()
                     response.body()?.items?.let {

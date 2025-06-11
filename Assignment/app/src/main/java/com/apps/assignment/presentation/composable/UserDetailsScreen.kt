@@ -3,7 +3,6 @@ package com.apps.assignment.presentation.composable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -67,25 +66,25 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
         AsyncImage(
             model = avatarLink,
             contentDescription = AppUtils.AppConstants.EMPTY,
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(100.dp).align(Alignment.CenterHorizontally)
         )
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.name), style = MaterialTheme.typography.titleSmall)
             Text(text = user?.name ?: AppUtils.AppConstants.NO_INFO, style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.bio), style = MaterialTheme.typography.titleSmall)
             Text(text = user?.bio ?: AppUtils.AppConstants.NO_INFO, style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.followers), style = MaterialTheme.typography.titleSmall)
             Text(text = user?.followers.toString(), style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.following), style = MaterialTheme.typography.titleSmall)
             Text(text = user?.following.toString(), style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.repositories), style = MaterialTheme.typography.titleMedium)
         }
         LazyColumn(state = lazyListState, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -110,23 +109,23 @@ fun RepositoryTile(repository: Repository) {
     val context = LocalContext.current
 
     Column(modifier = Modifier.border(width = 2.dp, color = MaterialTheme.colorScheme.outline).padding(all = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.repository_name), style = MaterialTheme.typography.titleSmall)
             Text(text = repository.name, style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.description), style = MaterialTheme.typography.titleSmall)
             Text(text = repository.description ?: AppUtils.AppConstants.NO_INFO, style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.number_of_stars), style = MaterialTheme.typography.titleSmall)
             Text(text = repository.stargazersCount.toString(), style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.fork_count), style = MaterialTheme.typography.titleSmall)
             Text(text = repository.forksCount.toString(), style = MaterialTheme.typography.bodySmall)
         }
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = context.getString(R.string.created_at), style = MaterialTheme.typography.titleSmall)
             Text(text = repository.createdAt, style = MaterialTheme.typography.bodySmall)
         }
