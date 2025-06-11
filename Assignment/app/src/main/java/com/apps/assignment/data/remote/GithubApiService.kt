@@ -14,7 +14,7 @@ interface GithubApiService {
     suspend fun getUserData(@Path(value = "username") username: String): Response<User>
 
     @GET("users/{username}/repos")
-    suspend fun getUserRepositories(@Path(value = "username") username: String): Response<List<Repository>>
+    suspend fun getUserRepositories(@Path(value = "username") username: String, @Query("page") pageNumber: Int): Response<List<Repository>>
 
     @GET("search/users")
     suspend fun getSearchUsers(@Query("q") prefix: String, @Query("page") pageNumber: Int): Response<FetchListModel>

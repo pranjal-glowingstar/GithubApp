@@ -16,8 +16,8 @@ class GithubRepositoryImpl @Inject constructor(private val githubApiService: Git
         return githubApiService.getUserData(username)
     }
 
-    override suspend fun fetchUserRepositories(username: String): Response<List<Repository>> {
-        return githubApiService.getUserRepositories(username)
+    override suspend fun fetchUserRepositories(username: String, pageNumber: Int): Response<List<Repository>> {
+        return githubApiService.getUserRepositories(username, pageNumber)
     }
 
 }

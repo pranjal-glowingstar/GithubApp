@@ -14,22 +14,24 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val githubRepository: IGithubRepository): ViewModel() {
 
-    private val _searchTextfield = MutableStateFlow("")
+    private val _searchTextField = MutableStateFlow("")
     private val _userList: MutableStateFlow<List<UserSummary>> = MutableStateFlow(listOf())
-    private val _errorState = MutableStateFlow(false)
+    private val _errorState: MutableStateFlow<TextErrorState> = MutableStateFlow(TextErrorState.None)
+    private val _apiErrorState = MutableStateFlow(false)
     private val _pageNumber = MutableStateFlow(1)
 
-    val searchTextfield = _searchTextfield.asStateFlow()
+    val searchTextField = _searchTextField.asStateFlow()
     val userList = _userList.asStateFlow()
     val errorState = _errorState.asStateFlow()
+    val apiErrorState = _apiErrorState.asStateFlow()
 
-    fun updateTextfield(prefix: String){
-        _searchTextfield.value = prefix
+    fun updateTextField(prefix: String){
+        _searchTextField.value = prefix
     }
     fun searchUserData(){
-        if(_searchTextfield.value.length >= 3){
+        if(_searchTextField.value.length >= 3){
             viewModelScope.launch(Dispatchers.IO) {
-                val response = githubRepository.searchPrefix(_searchTextfield.value, _pageNumber.value)
+                val response = githubRepository.searchPrefix(_searchTextField.value, _pageNumber.value)
                 if(response.isSuccessful){
                     val currentList = _userList.value.toMutableList()
                     response.body()?.items?.let {
@@ -37,13 +39,20 @@ class MainViewModel @Inject constructor(private val githubRepository: IGithubRep
                     }
                     _userList.value = currentList
                     _pageNumber.value += 1
+                    _errorState.value = if(_userList.value.isEmpty()) TextErrorState.NoUserFound else TextErrorState.None
                 }else{
-                    _errorState.value = true
+                    _apiErrorState.value = true
                 }
             }
         }else{
-            _errorState.value = false
+            _apiErrorState.value = false
+            _errorState.value = if(_searchTextField.value.isNotEmpty()) TextErrorState.IncorrectLength else TextErrorState.None
             _userList.value = listOf()
         }
     }
+}
+sealed class TextErrorState{
+    data object NoUserFound : TextErrorState()
+    data object IncorrectLength: TextErrorState()
+    data object None: TextErrorState()
 }

@@ -16,9 +16,10 @@ import javax.inject.Inject
 class UserDetailsViewModel @Inject constructor(private val githubRepository: IGithubRepository): ViewModel() {
 
     private val _userInfo: MutableStateFlow<User?> = MutableStateFlow(null)
-    private val _userRepos: MutableStateFlow<List<Repository>?> = MutableStateFlow(null)
+    private val _userRepos: MutableStateFlow<List<Repository>> = MutableStateFlow(listOf())
     private val _errorState = MutableStateFlow(false)
     private val _repoError = MutableStateFlow(false)
+    private val _pageNumber = MutableStateFlow(1)
 
     val userInfo = _userInfo.asStateFlow()
     val userRepos = _userRepos.asStateFlow()
@@ -37,11 +38,17 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
     }
     fun fetchUserRepositories(username: String){
         viewModelScope.launch(Dispatchers.IO) {
-            val response = githubRepository.fetchUserRepositories(username)
+            val response = githubRepository.fetchUserRepositories(username, _pageNumber.value)
             if(response.isSuccessful){
-                _userRepos.value = response.body()
+                val currentList = _userRepos.value.toMutableList()
+                response.body()?.let {
+                    currentList.addAll(it)
+                }
+                _userRepos.value = currentList
+                _pageNumber.value += 1
             }else{
                 _repoError.value = true
+                _userRepos.value = listOf()
             }
         }
     }

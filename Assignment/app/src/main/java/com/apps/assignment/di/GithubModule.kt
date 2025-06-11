@@ -20,21 +20,22 @@ class GithubModule {
 
     @Provides
     @Singleton
-    fun getRetrofitInstance(): Retrofit{
-        return Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(GsonConverterFactory.create()).client(
+    fun getRetrofitInstance(): Retrofit {
+        return Retrofit.Builder().baseUrl("https://api.github.com/")
+            .addConverterFactory(GsonConverterFactory.create()).client(
             OkHttpClient.Builder().addInterceptor(TokenInterceptor()).build()
         ).build()
     }
 
     @Provides
-    fun getGithubService(retrofit: Retrofit): GithubApiService{
+    fun getGithubService(retrofit: Retrofit): GithubApiService {
         return retrofit.create(GithubApiService::class.java)
     }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class IGithubModule{
+abstract class IGithubModule {
 
     @Binds
     @Singleton
