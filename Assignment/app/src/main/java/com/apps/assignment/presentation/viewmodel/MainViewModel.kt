@@ -26,13 +26,18 @@ class MainViewModel @Inject constructor(private val githubRepository: IGithubRep
         _searchTextfield.value = prefix
     }
     fun searchUserData(){
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = githubRepository.searchPrefix(_searchTextfield.value)
-            if(response.isSuccessful){
-                _userList.value = response.body()?.items
-            }else{
-                _errorState.value = true
+        if(_searchTextfield.value.length >= 3){
+            viewModelScope.launch(Dispatchers.IO) {
+                val response = githubRepository.searchPrefix(_searchTextfield.value)
+                if(response.isSuccessful){
+                    _userList.value = response.body()?.items
+                }else{
+                    _errorState.value = true
+                }
             }
+        }else{
+            _errorState.value = false
+            _userList.value = null
         }
     }
 }
