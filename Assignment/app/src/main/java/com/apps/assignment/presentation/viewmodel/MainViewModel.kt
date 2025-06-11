@@ -16,9 +16,11 @@ class MainViewModel @Inject constructor(private val githubRepository: IGithubRep
 
     private val _searchTextfield = MutableStateFlow("")
     private val _userList: MutableStateFlow<List<UserSummary>?> = MutableStateFlow(null)
+    private val _errorState = MutableStateFlow(false)
 
     val searchTextfield = _searchTextfield.asStateFlow()
     val userList = _userList.asStateFlow()
+    val errorState = _errorState.asStateFlow()
 
     fun updateTextfield(prefix: String){
         _searchTextfield.value = prefix
@@ -28,6 +30,8 @@ class MainViewModel @Inject constructor(private val githubRepository: IGithubRep
             val response = githubRepository.searchPrefix(_searchTextfield.value)
             if(response.isSuccessful){
                 _userList.value = response.body()?.items
+            }else{
+                _errorState.value = true
             }
         }
     }

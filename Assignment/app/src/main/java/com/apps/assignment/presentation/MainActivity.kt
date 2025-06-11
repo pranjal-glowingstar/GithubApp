@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.apps.assignment.presentation.navigation.Navigation
 import com.apps.assignment.presentation.viewmodel.MainViewModel
+import com.apps.assignment.presentation.viewmodel.UserDetailsViewModel
 import com.apps.assignment.ui.theme.AssignmentTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private val userDetailsViewModel: UserDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AssignmentTheme {
                 Surface(modifier = Modifier.safeDrawingPadding()) {
-                    Navigation(viewModel)
+                    Navigation(viewModel, userDetailsViewModel)
                 }
             }
         }
