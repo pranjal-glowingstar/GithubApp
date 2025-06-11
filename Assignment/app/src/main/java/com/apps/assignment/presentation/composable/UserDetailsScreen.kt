@@ -16,13 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.apps.assignment.R
 import com.apps.assignment.common.AppUtils
@@ -34,10 +34,10 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
 
     val context = LocalContext.current
 
-    val user by viewModel.userInfo.collectAsState()
-    val userRepos by viewModel.userRepos.collectAsState()
-    val userError by viewModel.error.collectAsState()
-    val repoError by viewModel.repoError.collectAsState()
+    val user by viewModel.userInfo.collectAsStateWithLifecycle()
+    val userRepos by viewModel.userRepos.collectAsStateWithLifecycle()
+    val userError by viewModel.error.collectAsStateWithLifecycle()
+    val repoError by viewModel.repoError.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
@@ -61,7 +61,7 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         AsyncImage(
