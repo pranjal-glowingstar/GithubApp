@@ -1,3 +1,11 @@
+import java.util.Properties
+
+val githubToken: String? = project.rootProject.file("local.properties")
+    .inputStream()
+    .use { propsStream ->
+        Properties().apply { load(propsStream) }
+    }
+    .getProperty("github.token")
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +27,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "GITHUB_TOKEN", "\"$githubToken\"")
     }
 
     buildTypes {
@@ -39,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
