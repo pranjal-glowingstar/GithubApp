@@ -8,8 +8,8 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class GithubRepositoryImpl @Inject constructor(private val githubApiService: GithubApiService): IGithubRepository {
-    override suspend fun searchPrefix(prefix: String): Response<FetchListModel> {
-        return githubApiService.getSearchUsers(prefix)
+    override suspend fun searchPrefix(prefix: String, pageNumber: Int): Response<FetchListModel> {
+        return githubApiService.getSearchUsers(prefix, pageNumber)
     }
 
     override suspend fun fetchUserInfo(username: String): Response<User> {
