@@ -9,5 +9,5 @@ sealed class Routes {
     data object MainScreen: Routes()
 
     @Serializable
-    data class UserInfoScreen(val username: String): Routes()
+    data class UserInfoScreen(val username: String, val avatarLink: String): Routes()
 }

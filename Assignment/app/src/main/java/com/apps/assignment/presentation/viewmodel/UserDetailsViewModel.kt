@@ -52,5 +52,12 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
             }
         }
     }
+    fun resetStates(){
+        _userInfo.value = null
+        _userRepos.value = listOf()
+        _errorState.value = false
+        _repoError.value = false
+        _pageNumber.value = 1
+    }
 
 }

@@ -20,7 +20,7 @@ fun Navigation(viewModel: MainViewModel, userDetailsViewModel: UserDetailsViewMo
         }
         composable<Routes.UserInfoScreen>{
             val args = it.toRoute<Routes.UserInfoScreen>()
-            UserDetailsScreen(userDetailsViewModel,args.username)
+            UserDetailsScreen(userDetailsViewModel, args.username, args.avatarLink)
         }
     }
 }

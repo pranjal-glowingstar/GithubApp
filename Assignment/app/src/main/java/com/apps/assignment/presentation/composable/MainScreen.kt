@@ -54,7 +54,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
     }
     val onItemClicked: (UserSummary) -> Unit = remember(viewModel) {
         {
-            navController.navigate(Routes.UserInfoScreen(it.login))
+            navController.navigate(Routes.UserInfoScreen(it.login, it.avatarUrl))
         }
     }
 
