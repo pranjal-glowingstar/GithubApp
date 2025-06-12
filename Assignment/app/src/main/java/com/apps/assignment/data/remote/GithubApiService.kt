@@ -1,8 +1,8 @@
 package com.apps.assignment.data.remote
 
-import com.apps.assignment.models.FetchListModel
-import com.apps.assignment.models.Repository
-import com.apps.assignment.models.User
+import com.apps.assignment.common.models.FetchListModel
+import com.apps.assignment.common.models.Repository
+import com.apps.assignment.common.models.User
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

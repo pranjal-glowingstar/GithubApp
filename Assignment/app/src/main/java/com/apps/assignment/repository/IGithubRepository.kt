@@ -1,8 +1,8 @@
 package com.apps.assignment.repository
 
-import com.apps.assignment.models.FetchListModel
-import com.apps.assignment.models.Repository
-import com.apps.assignment.models.User
+import com.apps.assignment.common.models.FetchListModel
+import com.apps.assignment.common.models.Repository
+import com.apps.assignment.common.models.User
 import retrofit2.Response
 
 interface IGithubRepository {

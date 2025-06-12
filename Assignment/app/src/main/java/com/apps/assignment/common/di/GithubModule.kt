@@ -1,4 +1,4 @@
-package com.apps.assignment.di
+package com.apps.assignment.common.di
 
 import com.apps.assignment.data.remote.GithubApiService
 import com.apps.assignment.data.remote.TokenInterceptor

@@ -26,7 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apps.assignment.R
 import com.apps.assignment.common.AppUtils
-import com.apps.assignment.models.UserSummary
+import com.apps.assignment.common.models.UserSummary
 import com.apps.assignment.presentation.navigation.Routes
 import com.apps.assignment.presentation.viewmodel.MainViewModel
 import com.apps.assignment.presentation.viewmodel.TextErrorState

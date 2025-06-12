@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.apps.assignment.R
 import com.apps.assignment.common.AppUtils
-import com.apps.assignment.models.UserSummary
+import com.apps.assignment.common.models.UserSummary
 
 @Composable
 fun GithubUserTile(user: UserSummary, onItemClicked: (UserSummary) -> Unit) {

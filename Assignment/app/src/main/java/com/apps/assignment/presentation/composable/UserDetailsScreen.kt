@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.apps.assignment.R
 import com.apps.assignment.common.AppUtils
-import com.apps.assignment.models.Repository
+import com.apps.assignment.common.models.Repository
 import com.apps.assignment.presentation.viewmodel.UserDetailsViewModel
 
 @Composable

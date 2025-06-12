@@ -2,8 +2,8 @@ package com.apps.assignment.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apps.assignment.models.Repository
-import com.apps.assignment.models.User
+import com.apps.assignment.common.models.Repository
+import com.apps.assignment.common.models.User
 import com.apps.assignment.repository.IGithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.apps.assignment.models
+package com.apps.assignment.common.models
 
 import com.google.gson.annotations.SerializedName
 

@@ -3,7 +3,7 @@ package com.apps.assignment.presentation.viewmodel
 import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apps.assignment.models.UserSummary
+import com.apps.assignment.common.models.UserSummary
 import com.apps.assignment.repository.IGithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
