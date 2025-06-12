@@ -88,7 +88,7 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
             Text(text = context.getString(R.string.repositories), style = MaterialTheme.typography.titleMedium)
         }
         LazyColumn(state = lazyListState, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            itemsIndexed(items = userRepos, key = { _, item -> item.id }) { _, item ->
+            itemsIndexed(items = userRepos, key = { _, item -> item.id.toString()+item.url }) { _, item ->
                 RepositoryTile(item)
             }
             item {

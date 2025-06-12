@@ -44,7 +44,7 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
                 response.body()?.let {
                     currentList.addAll(it)
                 }
-                _userRepos.value = currentList
+                _userRepos.value = currentList.distinct()
                 _pageNumber.value += 1
             }else{
                 _repoError.value = true
