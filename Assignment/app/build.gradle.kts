@@ -16,11 +16,11 @@ plugins {
 }
 
 android {
-    namespace = "com.apps.assignment"
+    namespace = "com.apps.githubapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.apps.assignment"
+        applicationId = "com.apps.githubapp"
         minSdk = 29
         targetSdk = 35
         versionCode = 1

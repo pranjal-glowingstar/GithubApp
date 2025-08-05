@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Assignment"
+rootProject.name = "githubapp"
 include(":app")
  
