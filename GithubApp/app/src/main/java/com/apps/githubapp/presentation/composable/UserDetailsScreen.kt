@@ -18,7 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -30,8 +31,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarLink: String) {
-
-    val context = LocalContext.current
 
     val user by viewModel.userInfo.collectAsStateWithLifecycle()
     val userRepos by viewModel.userRepos.collectAsStateWithLifecycle()
@@ -46,7 +45,7 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
     LaunchedEffect(lazyListState) {
         snapshotFlow {
             AppUtils.isScrolledToTheEnd(lazyListState)
-        }.collect{ scrolledToEnd ->
+        }.collect { scrolledToEnd ->
             if (scrolledToEnd) {
                 viewModel.fetchUserRepositories(username)
             }
@@ -59,45 +58,26 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 12.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        AsyncImage(
-            model = avatarLink,
-            contentDescription = AppUtils.AppConstants.EMPTY,
-            modifier = Modifier.size(100.dp).align(Alignment.CenterHorizontally)
-        )
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.name), style = MaterialTheme.typography.titleSmall)
-            Text(text = user?.name ?: AppUtils.AppConstants.NO_INFO, style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.bio), style = MaterialTheme.typography.titleSmall)
-            Text(text = user?.bio ?: AppUtils.AppConstants.NO_INFO, style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.followers), style = MaterialTheme.typography.titleSmall)
-            Text(text = user?.followers.toString(), style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.following), style = MaterialTheme.typography.titleSmall)
-            Text(text = user?.following.toString(), style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.repositories), style = MaterialTheme.typography.titleMedium)
-        }
+        UserDetailInfoHeader(user, avatarLink)
         LazyColumn(state = lazyListState, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            itemsIndexed(items = userRepos, key = { _, item -> item.id.toString()+item.url }) { _, item ->
-                RepositoryTile(item)
+            itemsIndexed(
+                items = userRepos,
+                key = { _, item -> item.id.toString() + item.url }) { _, item ->
+                RepositoryCard(item)
             }
             item {
-                if(uiState is DetailsUiState.ApiErrorRepo){
-                    Text(text = context.getString(R.string.network_error))
+                if (uiState is DetailsUiState.ApiErrorRepo) {
+                    Text(text = stringResource(R.string.network_error))
                 }
             }
         }
-        if(uiState is DetailsUiState.ApiErrorUser){
-            Text(text = context.getString(R.string.network_error))
+        if (uiState is DetailsUiState.ApiErrorUser) {
+            Text(text = stringResource(R.string.network_error))
         }
     }
 }

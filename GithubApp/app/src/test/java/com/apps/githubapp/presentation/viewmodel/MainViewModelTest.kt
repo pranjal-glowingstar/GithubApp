@@ -1,5 +1,6 @@
 package com.apps.githubapp.presentation.viewmodel
 
+import com.apps.githubapp.common.AppUtils
 import com.apps.githubapp.common.DispatcherUtil
 import com.apps.githubapp.common.models.FetchListModel
 import com.apps.githubapp.common.models.UserSummary
@@ -8,9 +9,9 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -41,8 +42,8 @@ class MainViewModelTest {
     @Test
     fun testSearchUserDataWithInvalidLength() = runTest{
         viewModel.updateTextField("te")
-        viewModel.searchUserData()
-        assertEquals(viewModel.uiState.value, UIState.IncorrectLength)
+        delay(AppUtils.AppConstants.SEARCH_DEBOUNCE_TIME*2)
+        assertEquals(viewModel.uiState.first(), UIState.IncorrectLength)
     }
     @Test
     fun testSearchUserDataWithValidLengthAndFirstSearch() = runTest{

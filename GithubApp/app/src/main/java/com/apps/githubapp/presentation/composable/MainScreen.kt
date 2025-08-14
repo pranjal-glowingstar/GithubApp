@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -27,9 +27,7 @@ import com.apps.githubapp.presentation.viewmodel.UIState
 
 @Composable
 fun MainScreen(viewModel: MainViewModel, navController: NavController) {
-
-    val context = LocalContext.current
-
+    
     val searchTextField by viewModel.searchTextField.collectAsStateWithLifecycle()
     val userList by viewModel.userList.collectAsStateWithLifecycle()
     val errorState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -71,10 +69,10 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
         }
         item {
             when (errorState) {
-                is UIState.NoUserFound -> Text(text = context.getString(R.string.error_no_user))
-                is UIState.IncorrectLength -> Text(text = context.getString(R.string.error_prefix))
+                is UIState.NoUserFound -> Text(text = stringResource(R.string.error_no_user))
+                is UIState.IncorrectLength -> Text(text = stringResource(R.string.error_prefix))
                 is UIState.None -> {}
-                is UIState.ApiError -> Text(text = context.getString(R.string.network_error))
+                is UIState.ApiError -> Text(text = stringResource(R.string.network_error))
             }
         }
     }

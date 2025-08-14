@@ -24,8 +24,8 @@ class GithubModule {
     fun getRetrofitInstance(): Retrofit {
         return Retrofit.Builder().baseUrl(AppUtils.AppConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).client(
-            OkHttpClient.Builder().addInterceptor(TokenInterceptor()).build()
-        ).build()
+                OkHttpClient.Builder().addInterceptor(TokenInterceptor()).build()
+            ).build()
     }
 
     @Provides
