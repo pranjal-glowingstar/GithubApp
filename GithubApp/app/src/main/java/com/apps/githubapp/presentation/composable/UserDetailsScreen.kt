@@ -1,6 +1,5 @@
 package com.apps.githubapp.presentation.composable
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,8 +24,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.apps.githubapp.R
 import com.apps.githubapp.common.AppUtils
-import com.apps.githubapp.common.models.Repository
+import com.apps.githubapp.presentation.viewmodel.DetailsUiState
 import com.apps.githubapp.presentation.viewmodel.UserDetailsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarLink: String) {
@@ -35,13 +35,12 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
 
     val user by viewModel.userInfo.collectAsStateWithLifecycle()
     val userRepos by viewModel.userRepos.collectAsStateWithLifecycle()
-    val userError by viewModel.error.collectAsStateWithLifecycle()
-    val repoError by viewModel.repoError.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchUserInfo(username)
-        viewModel.fetchUserRepositories(username)
+        launch { viewModel.fetchUserInfo(username) }
+        launch { viewModel.fetchUserRepositories(username) }
     }
 
     LaunchedEffect(lazyListState) {
@@ -92,42 +91,13 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
                 RepositoryTile(item)
             }
             item {
-                if(repoError){
+                if(uiState is DetailsUiState.ApiErrorRepo){
                     Text(text = context.getString(R.string.network_error))
                 }
             }
         }
-        if(userError){
+        if(uiState is DetailsUiState.ApiErrorUser){
             Text(text = context.getString(R.string.network_error))
-        }
-    }
-}
-
-@Composable
-fun RepositoryTile(repository: Repository) {
-
-    val context = LocalContext.current
-
-    Column(modifier = Modifier.border(width = 2.dp, color = MaterialTheme.colorScheme.outline).padding(all = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.repository_name), style = MaterialTheme.typography.titleSmall)
-            Text(text = repository.name, style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.description), style = MaterialTheme.typography.titleSmall)
-            Text(text = repository.description ?: AppUtils.AppConstants.NO_INFO, style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.number_of_stars), style = MaterialTheme.typography.titleSmall)
-            Text(text = repository.stargazersCount.toString(), style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.fork_count), style = MaterialTheme.typography.titleSmall)
-            Text(text = repository.forksCount.toString(), style = MaterialTheme.typography.bodySmall)
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = context.getString(R.string.created_at), style = MaterialTheme.typography.titleSmall)
-            Text(text = repository.createdAt, style = MaterialTheme.typography.bodySmall)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.apps.githubapp.common.di
 
+import com.apps.githubapp.common.AppUtils
 import com.apps.githubapp.data.remote.GithubApiService
 import com.apps.githubapp.data.remote.TokenInterceptor
 import com.apps.githubapp.repository.GithubRepositoryImpl
@@ -21,13 +22,14 @@ class GithubModule {
     @Provides
     @Singleton
     fun getRetrofitInstance(): Retrofit {
-        return Retrofit.Builder().baseUrl("https://api.github.com/")
+        return Retrofit.Builder().baseUrl(AppUtils.AppConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).client(
             OkHttpClient.Builder().addInterceptor(TokenInterceptor()).build()
         ).build()
     }
 
     @Provides
+    @Singleton
     fun getGithubService(retrofit: Retrofit): GithubApiService {
         return retrofit.create(GithubApiService::class.java)
     }

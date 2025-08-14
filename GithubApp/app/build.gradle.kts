@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "com.apps.githubapp"
-        minSdk = 29
+        minSdk = 21
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

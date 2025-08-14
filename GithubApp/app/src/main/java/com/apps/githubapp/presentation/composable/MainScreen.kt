@@ -1,18 +1,12 @@
 package com.apps.githubapp.presentation.composable
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,7 +23,7 @@ import com.apps.githubapp.common.AppUtils
 import com.apps.githubapp.common.models.UserSummary
 import com.apps.githubapp.presentation.navigation.Routes
 import com.apps.githubapp.presentation.viewmodel.MainViewModel
-import com.apps.githubapp.presentation.viewmodel.TextErrorState
+import com.apps.githubapp.presentation.viewmodel.UIState
 
 @Composable
 fun MainScreen(viewModel: MainViewModel, navController: NavController) {
@@ -38,18 +32,12 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
 
     val searchTextField by viewModel.searchTextField.collectAsStateWithLifecycle()
     val userList by viewModel.userList.collectAsStateWithLifecycle()
-    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
-    val apiErrorState by viewModel.apiErrorState.collectAsStateWithLifecycle()
+    val errorState by viewModel.uiState.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
 
     val onValueChange: (String) -> Unit = remember(viewModel) {
         {
             viewModel.updateTextField(it)
-        }
-    }
-    val searchUserData = remember(viewModel) {
-        {
-            viewModel.searchUserData(true)
         }
     }
     val onItemClicked: (UserSummary) -> Unit = remember(viewModel) {
@@ -76,51 +64,17 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
-            Text(
-                text = context.getString(R.string.welcome),
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextField(
-                    value = searchTextField,
-                    onValueChange = onValueChange,
-                    placeholder = {
-                        Text(
-                            text = context.getString(R.string.enter),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    },
-                    suffix = {
-                        Text(
-                            text = context.getString(R.string.search),
-                            modifier = Modifier
-                                .clickable { searchUserData() }
-                                .border(width = 1.dp, color = MaterialTheme.colorScheme.outline)
-                                .padding(all = 6.dp)
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            SearchHeader(searchTextField, onValueChange)
         }
         itemsIndexed(items = userList, key = { _, item -> item.id }) { _, item ->
             GithubUserTile(item, onItemClicked)
         }
         item {
             when (errorState) {
-                is TextErrorState.NoUserFound -> Text(text = context.getString(R.string.error_no_user))
-                is TextErrorState.IncorrectLength -> Text(text = context.getString(R.string.error_prefix))
-                is TextErrorState.None -> {}
-            }
-        }
-        item {
-            if (apiErrorState) {
-                Text(text = context.getString(R.string.network_error))
+                is UIState.NoUserFound -> Text(text = context.getString(R.string.error_no_user))
+                is UIState.IncorrectLength -> Text(text = context.getString(R.string.error_prefix))
+                is UIState.None -> {}
+                is UIState.ApiError -> Text(text = context.getString(R.string.network_error))
             }
         }
     }

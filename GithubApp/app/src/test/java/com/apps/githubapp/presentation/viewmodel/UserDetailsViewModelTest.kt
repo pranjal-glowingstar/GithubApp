@@ -42,8 +42,7 @@ class UserDetailsViewModelTest {
     fun resetStates() = runTest{
         viewModel.resetStates()
         assertEquals(viewModel.userInfo.first(), null)
-        assertEquals(viewModel.error.first(), false)
-        assertEquals(viewModel.repoError.first(), false)
+        assertEquals(viewModel.uiState.first(), DetailsUiState.None)
     }
     @Test
     fun fetchUserInfoSuccess() = runTest{
@@ -57,7 +56,7 @@ class UserDetailsViewModelTest {
         coEvery { githubRepository.fetchUserInfo(any()) } returns Response.error(401, ResponseBody.Companion.create(null, ""))
         viewModel.fetchUserInfo("test")
         advanceUntilIdle()
-        assertTrue(viewModel.error.first())
+        assertEquals(viewModel.uiState.first(), DetailsUiState.ApiErrorUser)
     }
     @Test
     fun fetchUserRepositoriesSuccess() = runTest{
@@ -71,6 +70,6 @@ class UserDetailsViewModelTest {
         coEvery { githubRepository.fetchUserRepositories(any(), any()) } returns Response.error(401, ResponseBody.Companion.create(null, ""))
         viewModel.fetchUserRepositories("test")
         advanceUntilIdle()
-        assertTrue(viewModel.repoError.first())
+        assertEquals(viewModel.uiState.first(), DetailsUiState.ApiErrorRepo)
     }
 }
