@@ -55,7 +55,6 @@ fun UserDetailInfoHeader(user: User?, avatarLink: String) {
                     .clip(CircleShape)
             )
 
-            // Name and Bio Section
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)

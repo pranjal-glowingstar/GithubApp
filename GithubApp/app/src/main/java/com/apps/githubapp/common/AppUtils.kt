@@ -10,6 +10,7 @@ object AppUtils {
         const val SEARCH_DEBOUNCE_TIME = 500L
         const val SEARCH_THRESHOLD = 3
         const val BASE_URL = "https://api.github.com/"
+        const val DATABASE_NAME = "githubDatabase"
     }
 
     fun isScrolledToTheEnd(

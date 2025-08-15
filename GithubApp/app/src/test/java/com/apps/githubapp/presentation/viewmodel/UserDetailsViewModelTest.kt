@@ -56,7 +56,7 @@ class UserDetailsViewModelTest {
         coEvery { githubRepository.fetchUserInfo(any()) } returns Response.error(401, ResponseBody.Companion.create(null, ""))
         viewModel.fetchUserInfo("test")
         advanceUntilIdle()
-        assertEquals(viewModel.uiState.first(), DetailsUiState.ApiErrorUser)
+        assertEquals(viewModel.uiState.first(), DetailsUiState.ApiError)
     }
     @Test
     fun fetchUserRepositoriesSuccess() = runTest{

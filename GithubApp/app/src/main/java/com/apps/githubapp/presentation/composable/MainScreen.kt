@@ -1,5 +1,6 @@
 package com.apps.githubapp.presentation.composable
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,6 +42,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
     }
     val onItemClicked: (UserSummary) -> Unit = remember(viewModel) {
         {
+            viewModel.saveUserSummaryInLocal(it)
             navController.navigate(Routes.UserInfoScreen(it.login, it.avatarUrl))
         }
     }
@@ -72,7 +75,11 @@ fun MainScreen(viewModel: MainViewModel, navController: NavController) {
                 is UIState.NoUserFound -> Text(text = stringResource(R.string.error_no_user))
                 is UIState.IncorrectLength -> Text(text = stringResource(R.string.error_prefix))
                 is UIState.None -> {}
-                is UIState.ApiError -> Text(text = stringResource(R.string.network_error))
+                is UIState.ApiError -> {
+                    val context = LocalContext.current
+                    Toast.makeText(context, stringResource(R.string.network_error), Toast.LENGTH_SHORT).show()
+                    viewModel.fetchSummaryFromLocal()
+                }
             }
         }
     }

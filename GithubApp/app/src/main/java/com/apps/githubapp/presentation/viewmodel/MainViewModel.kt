@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.apps.githubapp.common.AppUtils
 import com.apps.githubapp.common.DispatcherUtil
 import com.apps.githubapp.common.models.UserSummary
+import com.apps.githubapp.repository.IGithubLocalRepository
 import com.apps.githubapp.repository.IGithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val githubRepository: IGithubRepository): ViewModel() {
+class MainViewModel @Inject constructor(private val githubRepository: IGithubRepository, private val githubLocalRepository: IGithubLocalRepository): ViewModel() {
 
     private val _searchTextField = MutableStateFlow(AppUtils.AppConstants.EMPTY)
     private val _userList: MutableStateFlow<List<UserSummary>> = MutableStateFlow(listOf())
@@ -63,6 +64,18 @@ class MainViewModel @Inject constructor(private val githubRepository: IGithubRep
             }
         } catch (e: Exception){
             _uiState.value = UIState.ApiError
+        }
+    }
+    fun saveUserSummaryInLocal(user: UserSummary){
+        viewModelScope.launch(DispatcherUtil.getIoDispatcher()) {
+            githubLocalRepository.saveUserSummary(user)
+        }
+    }
+    fun fetchSummaryFromLocal(){
+        viewModelScope.launch(DispatcherUtil.getIoDispatcher()) {
+            val cachedSearchList = githubLocalRepository.getUserSummary()
+            _userList.value = cachedSearchList
+            _uiState.value = if(_userList.value.isEmpty()) UIState.NoUserFound else UIState.None
         }
     }
 }
