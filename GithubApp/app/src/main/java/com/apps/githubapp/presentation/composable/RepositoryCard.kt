@@ -1,5 +1,6 @@
 package com.apps.githubapp.presentation.composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
@@ -18,11 +19,11 @@ import com.apps.githubapp.R
 import com.apps.githubapp.common.models.Repository
 
 @Composable
-fun RepositoryCard(repository: Repository) {
+fun RepositoryCard(repository: Repository, onItemClicked: (Repository) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp).clickable{ onItemClicked(repository) },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(

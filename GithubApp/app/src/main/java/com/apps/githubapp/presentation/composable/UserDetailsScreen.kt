@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.apps.githubapp.R
 import com.apps.githubapp.common.isScrolledToTheEnd
+import com.apps.githubapp.common.models.Repository
 import com.apps.githubapp.presentation.viewmodel.DetailsRepoState
 import com.apps.githubapp.presentation.viewmodel.DetailsUiState
 import com.apps.githubapp.presentation.viewmodel.UserDetailsViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarLink: String) {
@@ -38,6 +39,12 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val repoState by viewModel.repoState.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
+
+    val onItemClicked: (Repository) -> Unit = remember(viewModel) {
+        {
+            viewModel.onItemClicked(it.htmlUrl)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserInfo(username)
@@ -70,7 +77,7 @@ fun UserDetailsScreen(viewModel: UserDetailsViewModel, username: String, avatarL
             itemsIndexed(
                 items = userRepos,
                 key = { _, item -> item.id.toString() + item.url }) { _, item ->
-                RepositoryCard(item)
+                RepositoryCard(item, onItemClicked)
             }
             item {
                 when(repoState){

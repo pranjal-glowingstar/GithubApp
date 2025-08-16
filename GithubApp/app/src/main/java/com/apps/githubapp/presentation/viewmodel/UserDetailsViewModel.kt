@@ -1,5 +1,7 @@
 package com.apps.githubapp.presentation.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apps.githubapp.common.DispatcherUtil
@@ -20,6 +22,7 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
     private val _userRepos: MutableStateFlow<List<Repository>> = MutableStateFlow(listOf())
     private val _uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(DetailsUiState.None)
     private val _repoState: MutableStateFlow<DetailsRepoState> = MutableStateFlow(DetailsRepoState.None)
+    private val _url: MutableLiveData<String> = MutableLiveData(null)
     private var pageNumber = 1
     private var shouldShowToast = true
 
@@ -94,6 +97,10 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
             _userInfo.value = user
         }
     }
+    fun onItemClicked(url: String){
+        _url.value = url
+    }
+    fun getUrlLiveData(): LiveData<String> = _url
     fun resetStates(){
         _userInfo.value = null
         _userRepos.value = listOf()

@@ -1,5 +1,7 @@
 package com.apps.githubapp.presentation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +15,7 @@ import com.apps.githubapp.presentation.viewmodel.MainViewModel
 import com.apps.githubapp.presentation.viewmodel.UserDetailsViewModel
 import com.apps.githubapp.ui.theme.GithubAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -28,6 +31,15 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.safeDrawingPadding()) {
                     Navigation(viewModel, userDetailsViewModel)
                 }
+            }
+        }
+        addObservers()
+    }
+    private fun addObservers(){
+        userDetailsViewModel.getUrlLiveData().observe(this){
+            if(!it.isNullOrEmpty()){
+                val intent = Intent(Intent.ACTION_VIEW, it.toUri())
+                startActivity(intent)
             }
         }
     }
