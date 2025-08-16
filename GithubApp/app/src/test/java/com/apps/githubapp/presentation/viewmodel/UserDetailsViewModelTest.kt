@@ -2,8 +2,10 @@ package com.apps.githubapp.presentation.viewmodel
 
 import com.apps.githubapp.common.models.Repository
 import com.apps.githubapp.common.models.User
+import com.apps.githubapp.repository.IGithubLocalRepository
 import com.apps.githubapp.repository.IGithubRepository
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -27,6 +29,7 @@ class UserDetailsViewModelTest {
 
     private lateinit var viewModel: UserDetailsViewModel
     private val githubRepository = mockk<IGithubRepository>()
+    private val githubLocalRepository = mockk<IGithubLocalRepository>()
     private val user = mockk<User>()
     private val repository = mockk<Repository>()
 
@@ -35,7 +38,7 @@ class UserDetailsViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns Dispatchers.Main
-        viewModel = UserDetailsViewModel(githubRepository)
+        viewModel = UserDetailsViewModel(githubRepository, githubLocalRepository)
     }
 
     @Test
@@ -70,6 +73,24 @@ class UserDetailsViewModelTest {
         coEvery { githubRepository.fetchUserRepositories(any(), any()) } returns Response.error(401, ResponseBody.Companion.create(null, ""))
         viewModel.fetchUserRepositories("test")
         advanceUntilIdle()
-        assertEquals(viewModel.uiState.first(), DetailsUiState.ApiErrorRepo)
+        assertEquals(viewModel.repoState.first(), DetailsRepoState.ApiError)
+    }
+    @Test
+    fun fetchUserRepoFromLocal() = runTest {
+        coEvery { githubLocalRepository.getUserRepositories(any()) } returns listOf()
+        viewModel.fetchUserRepoFromLocal("")
+        advanceUntilIdle()
+        coVerify {
+            githubLocalRepository.getUserRepositories(any())
+        }
+    }
+    @Test
+    fun fetchUserInfoFromLocal() = runTest {
+        coEvery { githubLocalRepository.getUserData(any()) } returns mockk()
+        viewModel.fetchUserInfoFromLocal("")
+        advanceUntilIdle()
+        coVerify {
+            githubLocalRepository.getUserData(any())
+        }
     }
 }

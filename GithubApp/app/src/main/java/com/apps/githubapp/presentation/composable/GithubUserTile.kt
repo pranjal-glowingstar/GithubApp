@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.apps.githubapp.R
-import com.apps.githubapp.common.AppUtils
+import com.apps.githubapp.common.AppConstants
 import com.apps.githubapp.common.models.UserSummary
 
 @Composable
@@ -33,7 +33,7 @@ fun GithubUserTile(user: UserSummary, onItemClicked: (UserSummary) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
+            .height(100.dp)
             .clickable { onItemClicked(user) }
             .padding(all = 4.dp),
         shape = RoundedCornerShape(8.dp),
@@ -46,18 +46,18 @@ fun GithubUserTile(user: UserSummary, onItemClicked: (UserSummary) -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Column {
+            Column(modifier = Modifier.padding(start = 12.dp)) {
                 Text(
                     text = stringResource(R.string.user_name),
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleMedium
                 )
-                Text(text = user.login, style = MaterialTheme.typography.bodySmall)
+                Text(text = user.login, style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(modifier = Modifier.weight(1f))
             AsyncImage(
                 model = user.avatarUrl,
                 placeholder = painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = AppUtils.AppConstants.EMPTY,
+                contentDescription = AppConstants.EMPTY,
                 modifier = Modifier
                     .size(75.dp)
                     .clip(CircleShape)

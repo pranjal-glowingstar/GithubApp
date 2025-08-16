@@ -2,7 +2,7 @@ package com.apps.githubapp.common.di
 
 import android.content.Context
 import androidx.room.Room
-import com.apps.githubapp.common.AppUtils
+import com.apps.githubapp.common.AppConstants
 import com.apps.githubapp.data.local.GithubDatabase
 import com.apps.githubapp.data.local.dao.RepositoryDao
 import com.apps.githubapp.data.local.dao.UserDao
@@ -32,7 +32,7 @@ class GithubModule {
     @Provides
     @Singleton
     fun getRetrofitInstance(): Retrofit {
-        return Retrofit.Builder().baseUrl(AppUtils.AppConstants.BASE_URL)
+        return Retrofit.Builder().baseUrl(AppConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).client(
                 OkHttpClient.Builder().addInterceptor(TokenInterceptor()).build()
             ).build()
@@ -50,7 +50,7 @@ class GithubModule {
         return Room.databaseBuilder(
             context,
             GithubDatabase::class.java,
-            AppUtils.AppConstants.DATABASE_NAME
+            AppConstants.DATABASE_NAME
         ).build()
     }
 

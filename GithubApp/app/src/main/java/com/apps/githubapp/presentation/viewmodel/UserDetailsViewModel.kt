@@ -21,6 +21,7 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
     private val _uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(DetailsUiState.None)
     private val _repoState: MutableStateFlow<DetailsRepoState> = MutableStateFlow(DetailsRepoState.None)
     private var pageNumber = 1
+    private var shouldShowToast = true
 
     val userInfo = _userInfo.asStateFlow()
     val userRepos = _userRepos.asStateFlow()
@@ -29,25 +30,33 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
 
     fun fetchUserInfo(username: String){
         viewModelScope.launch(DispatcherUtil.getIoDispatcher()) {
+            _uiState.value = DetailsUiState.Loader
             try {
                 val response = githubRepository.fetchUserInfo(username)
                 if(response.isSuccessful){
                     response.body()?.let {
                         _userInfo.value = it
                         githubLocalRepository.saveUserData(it)
+                        _uiState.value = DetailsUiState.None
                     } ?: run {
-                        _uiState.value = DetailsUiState.ApiError
+                        _uiState.value = DetailsUiState.ApiError(shouldShowToast)
+                        shouldShowToast = false
                     }
                 }else{
-                    _uiState.value = DetailsUiState.ApiError
+                    _uiState.value = DetailsUiState.ApiError(shouldShowToast)
+                    shouldShowToast = false
                 }
             } catch (e: Exception){
-                _uiState.value = DetailsUiState.ApiError
+                _uiState.value = DetailsUiState.ApiError(shouldShowToast)
+                shouldShowToast = false
             }
         }
     }
-    fun fetchUserRepositories(username: String){
+    fun fetchUserRepositories(username: String, isScrolledFetch: Boolean = false){
         viewModelScope.launch(DispatcherUtil.getIoDispatcher()) {
+            if(_userRepos.value.isNotEmpty() && isScrolledFetch){
+                _repoState.value = DetailsRepoState.Loader
+            }
             try {
                 val response = githubRepository.fetchUserRepositories(username, pageNumber)
                 if(response.isSuccessful){
@@ -55,17 +64,21 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
                     response.body()?.let {
                         currentList.addAll(it)
                         _userRepos.value = currentList.distinct()
-                        githubLocalRepository.saveUserRepositories(currentList)
                         pageNumber++
+                        githubLocalRepository.saveUserRepositories(currentList)
+                        _repoState.value = DetailsRepoState.None
                     } ?: run {
-                        _repoState.value = DetailsRepoState.ApiError
+                        _repoState.value = DetailsRepoState.ApiError(shouldShowToast)
+                        shouldShowToast = false
                     }
                 }else{
-                    _repoState.value = DetailsRepoState.ApiError
+                    _repoState.value = DetailsRepoState.ApiError(shouldShowToast)
+                    shouldShowToast = false
                     _userRepos.value = listOf()
                 }
             } catch (e: Exception){
-                _repoState.value = DetailsRepoState.ApiError
+                _repoState.value = DetailsRepoState.ApiError(shouldShowToast)
+                shouldShowToast = false
             }
         }
     }
@@ -89,10 +102,12 @@ class UserDetailsViewModel @Inject constructor(private val githubRepository: IGi
     }
 }
 sealed class DetailsUiState{
-    data object ApiError: DetailsUiState()
+    data class ApiError(val shouldShowToast: Boolean): DetailsUiState()
     data object None: DetailsUiState()
+    data object Loader: DetailsUiState()
 }
 sealed class DetailsRepoState{
-    data object ApiError: DetailsRepoState()
+    data class ApiError(val shouldShowToast: Boolean): DetailsRepoState()
     data object None: DetailsRepoState()
+    data object Loader: DetailsRepoState()
 }

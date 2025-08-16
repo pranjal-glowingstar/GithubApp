@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.apps.githubapp.R
-import com.apps.githubapp.common.AppUtils
+import com.apps.githubapp.common.AppConstants
 import com.apps.githubapp.common.models.User
 
 @Composable
@@ -49,7 +49,7 @@ fun UserDetailInfoHeader(user: User?, avatarLink: String) {
             AsyncImage(
                 model = avatarLink,
                 placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = AppUtils.AppConstants.EMPTY,
+                contentDescription = AppConstants.EMPTY,
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
@@ -60,7 +60,7 @@ fun UserDetailInfoHeader(user: User?, avatarLink: String) {
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = user?.name ?: AppUtils.AppConstants.NO_INFO,
+                    text = user?.name ?: AppConstants.NO_INFO,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center

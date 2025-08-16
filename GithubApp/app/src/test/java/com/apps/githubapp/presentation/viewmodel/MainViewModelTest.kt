@@ -1,12 +1,16 @@
 package com.apps.githubapp.presentation.viewmodel
 
-import com.apps.githubapp.common.AppUtils
+import com.apps.githubapp.common.AppConstants
 import com.apps.githubapp.common.DispatcherUtil
 import com.apps.githubapp.common.models.FetchListModel
 import com.apps.githubapp.common.models.UserSummary
+import com.apps.githubapp.repository.IGithubLocalRepository
 import com.apps.githubapp.repository.IGithubRepository
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +32,7 @@ import retrofit2.Response
 class MainViewModelTest {
     private lateinit var viewModel: MainViewModel
     private val githubRepository = mockk<IGithubRepository>()
+    private val githubLocalRepository = mockk<IGithubLocalRepository>()
     private val testDispatcher = StandardTestDispatcher()
     private val userSummary = UserSummary("",1,"","",null,"","","","","","","","","","","","",true,Double.MAX_VALUE)
 
@@ -36,13 +41,13 @@ class MainViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkObject(DispatcherUtil)
         every { DispatcherUtil.getIoDispatcher() } returns testDispatcher
-        viewModel = MainViewModel(githubRepository)
+        viewModel = MainViewModel(githubRepository, githubLocalRepository)
     }
 
     @Test
     fun testSearchUserDataWithInvalidLength() = runTest{
         viewModel.updateTextField("te")
-        delay(AppUtils.AppConstants.SEARCH_DEBOUNCE_TIME*2)
+        delay(AppConstants.SEARCH_DEBOUNCE_TIME*2)
         assertEquals(viewModel.uiState.first(), UIState.IncorrectLength)
     }
     @Test
@@ -79,5 +84,23 @@ class MainViewModelTest {
         viewModel.searchUserData()
         advanceUntilIdle()
         assertTrue(viewModel.userList.first().isEmpty())
+    }
+    @Test
+    fun saveUserSummaryInLocal() = runTest {
+        coEvery { githubLocalRepository.saveUserSummary(any()) } just Runs
+        viewModel.saveUserSummaryInLocal(userSummary)
+        advanceUntilIdle()
+        coVerify {
+            githubLocalRepository.saveUserSummary(any())
+        }
+    }
+    @Test
+    fun fetchSummaryFromLocal() = runTest {
+        coEvery { githubLocalRepository.getUserSummary() } returns listOf(userSummary, userSummary)
+        viewModel.fetchSummaryFromLocal()
+        advanceUntilIdle()
+        coVerify {
+            githubLocalRepository.getUserSummary()
+        }
     }
 }
